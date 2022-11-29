@@ -41,5 +41,4 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 translations/*.xlf
 
-/docker/db/
 config/secrets/dev/dev.decrypt.private.php
