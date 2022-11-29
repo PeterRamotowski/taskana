@@ -11,6 +11,7 @@ Contents:
 - [Demo](#demo)
 - [Stack](#stack)
 - [Future plans](#future-plans)
+- [Previews](#previews)
 - [Docker local setup](#docker-local-setup)
 - [Security](#security)
 
@@ -40,6 +41,20 @@ Analyzed with PHPStan on level 9.
 * Notifications about assigned tasks and new comments
 * User registration
 * Data log (for admin user)
+
+## Previews
+
+**Task details:**
+
+![task-details](https://user-images.githubusercontent.com/8025853/204584313-bd570d06-5b9b-4fe2-8c49-6694cc2d331c.png)
+
+**Assigned tasks list**
+
+![tasks-assigned-list](https://user-images.githubusercontent.com/8025853/204584572-8d52d78e-dbe2-49dc-b378-3e50078aaa5c.png)
+
+**User details**
+
+![user-details](https://user-images.githubusercontent.com/8025853/204584745-cb3e2fa3-22a7-47c1-85e1-ceb57c5262ae.png)
 
 ## Docker local setup
 
