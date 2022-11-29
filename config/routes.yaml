@@ -1,0 +1,24 @@
+app_index:
+  path: /
+  controller: App\Controller\IndexController
+
+user_logout:
+  path: /user/logout
+
+controllers:
+  resource: ../src/Controller/
+  type: attribute
+
+user:
+  resource: ../src/Controller/Auth
+  type: attribute
+  prefix: /user
+
+api:
+  resource: ../src/Controller/Api
+  type: attribute
+  prefix: /api
+
+kernel:
+  resource: ../src/Kernel.php
+  type: attribute

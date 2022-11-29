@@ -1,0 +1,36 @@
+{% trans_default_domain 'admin' %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>
+		{% block title %}Tasko{% endblock %}
+	</title>
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
+
+	{% block css '' %}
+	{% block js_header '' %}
+
+	{% block stylesheets '' %}
+	{% block javascripts '' %}
+
+	{{ encore_entry_link_tags('global') }}
+	{{ encore_entry_script_tags('global') }}
+</head>
+
+<body>
+	<main class="container-fluid">
+		{% block content %}
+			<div id="app" {% for attribute,value in app_attributes|default({} ) %} {{ attribute }}="{{ value }}" {% endfor %}>
+				<article aria-busy="true"></article>
+			</div>
+		{% endblock %}
+	</main>
+
+	<script type="application/json" id="appUser">{{ app.user|json_encode|raw }}</script>
+	
+	{% block js '' %}
+	{% block js_footer '' %}
+</body>
+</html>

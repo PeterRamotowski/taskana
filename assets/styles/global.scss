@@ -1,0 +1,52 @@
+a {
+  color: inherit;
+  text-decoration-color: rgba(#fff, .5);
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.v-card {
+  .v-card-title {
+    line-height: 1.25em;
+  }
+}
+
+.v-chip--link {
+  transition: color .2s;
+  &.v-theme--dark:hover {
+    color: #fff !important;
+  }
+}
+
+.v-dialog {
+  .v-overlay__content {
+    max-height: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+.v-input--error {
+  .v-label,
+  .v-icon {
+    color: rgb(var(--v-theme-error));
+  }
+}
+
+.v-input__details {
+  padding-bottom: 6px;
+}
+
+.text-lighten {
+  opacity: 50%;
+}
+
+.text-smaller {
+  font-size: 85%;
+}
+
+.multiline {
+  white-space: pre-line;
+}

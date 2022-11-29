@@ -1,0 +1,60 @@
+parameters:
+  env(DATABASE_URL): ''
+
+doctrine:
+  dbal:
+    url: '%env(resolve:DATABASE_URL)%'
+    driver: 'pdo_mysql'
+    server_version: '8'
+    charset: utf8mb4
+  orm:
+    auto_generate_proxy_classes: '%kernel.debug%'
+    naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+    auto_mapping: true
+    mappings:
+      App:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'App\Entity'
+        alias: App
+
+      AppUser:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'App\Entity\User'
+        alias: AppUser
+
+      gedmo_loggable:
+        type: attribute
+        prefix: Gedmo\Loggable\Entity
+        dir: '%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity'
+        is_bundle: false
+    dql:
+      string_functions:
+        FIELD: DoctrineExtensions\Query\Mysql\Field
+
+when@test:
+  doctrine:
+    dbal:
+      dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+  doctrine:
+    orm:
+      auto_generate_proxy_classes: false
+      query_cache_driver:
+        type: pool
+        pool: doctrine.system_cache_pool
+      result_cache_driver:
+        type: pool
+        pool: doctrine.result_cache_pool
+
+  framework:
+    cache:
+      pools:
+        doctrine.result_cache_pool:
+          adapter: cache.app
+        doctrine.system_cache_pool:
+          adapter: cache.system

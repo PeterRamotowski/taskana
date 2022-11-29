@@ -1,0 +1,5 @@
+sensio_framework_extra:
+    request: { converters: true, auto_convert: true }
+    security: { annotations: true }
+    router:
+        annotations: false

@@ -1,0 +1,42 @@
+{% trans_default_domain 'admin' %}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('login') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('login') }}
+{% endblock %}
+
+{% block content %}
+    <article class="grid">
+        <div>
+            <hgroup>
+                <h1>{{ 'auth.title.login'|trans }}</h1>
+                <h2>Taskana</h2>
+            </hgroup>
+
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form action="{{ path('user_login') }}" method="post">
+                <input type="email" id="form-email" name="email" required="required" placeholder="{{ 'form.label.email'|trans }}" value="{{ username }}" aria-label="{{ 'form.label.email'|trans }}" aria-required="true" autocomplete="email" required>
+
+                    <input type="password" id="password" required="required" aria-required="true" name="password" placeholder="{{ 'auth.form.label.password'|trans }}" aria-label="{{ 'auth.form.label.password'|trans }}" autocomplete="current-password" required>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+
+                        <button type="submit" class="primary">
+                            {{ 'auth.action.login'|trans }}
+                        </button>
+                    </form>
+        </div>
+        <div></div>
+    </article>
+{% endblock %}

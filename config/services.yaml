@@ -1,0 +1,69 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    uuid_pattern: "[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}"
+
+    env(ATTACHMENT_UPLOAD_DIR): "%kernel.project_dir%/var/uploads/attachments"
+
+    env(APP_ROUTER_HOST): localhost
+    env(APP_ROUTER_SCHEME): http
+
+    locale: "en"
+
+    email.sender.address: "%env(MAILER_SENDER_ADDRESS)%"
+    email.sender.name: "%env(MAILER_SENDER_NAME)%"
+
+    email.notificaions.address: "%env(NOTIFICATIONS_EMAIL_ADDRESS)%"
+
+    attachment_upload_dir: "%env(ATTACHMENT_UPLOAD_DIR)%"
+
+    router.request_context.host: "%env(APP_ROUTER_HOST)%"
+    router.request_context.scheme: "%env(APP_ROUTER_SCHEME)%"
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: "../src/"
+        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
+
+    App\Controller\:
+        resource: "../src/Controller"
+        tags: ["controller.service_arguments"]
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [setAnnotationReader, ["@annotation_reader"]]
+
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    app.entity.manager:
+        class: App\Manager\AppEntityManager
+
+    App\EventListener\TaskListener:
+        arguments: ['@app.entity.manager']
+        tags:
+            - { name: doctrine.orm.entity_listener, lazy: true }
+
+    App\EventListener\ProjectListener:
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    Symfony\Component\Uid\Command\GenerateUuidCommand: ~
+    Symfony\Component\Uid\Command\InspectUuidCommand: ~
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones

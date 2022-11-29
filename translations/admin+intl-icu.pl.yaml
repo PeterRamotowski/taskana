@@ -1,0 +1,4 @@
+auth.title.login: 'Zaloguj się'
+form.label.email: Email
+auth.form.label.password: Hasło
+auth.action.login: 'Zaloguj się'

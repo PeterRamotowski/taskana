@@ -1,0 +1,12 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        public_dir: '%kernel.project_dir%/public'
+    exception_controller: null
+    cache: false
+
+when@test:
+    twig:
+        strict_variables: true
