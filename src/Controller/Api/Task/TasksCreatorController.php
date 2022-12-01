@@ -5,7 +5,6 @@ namespace App\Controller\Api\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use App\Response\TaskResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +16,7 @@ class TasksCreatorController extends AbstractController
     ) {
     }
 
-    #[Route('/tasks/creator/{id}', name: 'api_tasks_creator', requirements: ['id' => '%uuid_pattern%'], methods: ['GET'])]
-    #[ParamConverter('creator', options: ['mapping' => ['id' => 'id']])]
+    #[Route('/tasks/creator/{creator}', name: 'api_tasks_creator', requirements: ['creator' => '%uuid_pattern%'], methods: ['GET'])]
     public function __invoke(User $creator): Response
     {
         $tasksList = $this->taskRepository->getCreatedTasks($creator);
