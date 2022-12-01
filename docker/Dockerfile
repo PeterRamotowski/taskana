@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip4 libzip-dev libwebp-dev \
     libjpeg62-turbo libpng16-16 libx11-6 \
     libxcb1 libxext6 libxrender1 \
-    procps nano git libreadline-dev sudo redis-tools
+    procps nano git libreadline-dev sudo redis-tools ssh
 
 RUN docker-php-ext-configure gd --with-jpeg --with-webp && \
     docker-php-ext-configure hash --with-mhash && \
