@@ -5,10 +5,10 @@ namespace App\ArgumentResolver;
 use App\Service\RequestMapperService;
 use App\Service\ValidatorService;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class RequestBodyValueResolver implements ArgumentValueResolverInterface
+class RequestBodyValueResolver implements ValueResolverInterface
 {
     public function __construct(
         private readonly RequestMapperService $requestMapper,
