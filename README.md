@@ -2,7 +2,7 @@
 
 Simple Task management for small teams with the ability to delegate tasks to users and write comments.
 
-Developed using Symfony 6 PHP framework, Vue 3 and Vuetify 3.
+Developed using Symfony 6.2 PHP framework, Vue 3 and Vuetify 3.
 
 API documentation is available in OpenAPI 3.0 format under `/api/doc` path.
 
@@ -26,8 +26,8 @@ Log in using:
 
 ## Stack
 
-* Symfony 6.1
-* PHP 8.1
+* **Symfony 6.2**
+* **PHP 8.1**
 * Doctrine DBAL 3
 * MySQL 8
 * **Vue 3** / Composition API
