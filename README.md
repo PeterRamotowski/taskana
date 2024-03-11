@@ -8,21 +8,11 @@ API documentation is available in OpenAPI 3.0 format under `/api/doc` path.
 
 Contents:
 
-- [Demo](#demo)
 - [Stack](#stack)
 - [Future plans](#future-plans)
 - [Previews](#previews)
 - [Docker local setup](#docker-local-setup)
 - [Security](#security)
-
-## Demo
-
-Demo is available at the address: **https://taskana.fkv.pl**
-
-Log in using:
-
-* Username: **taskana@fkv.pl** or **user@fkv.pl**
-* Password: **password**
 
 ## Stack
 
