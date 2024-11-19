@@ -39,12 +39,15 @@ services:
         resource: "../src/Controller"
         tags: ["controller.service_arguments"]
 
+    gedmo.mapping.driver.attribute:
+        class: Gedmo\Mapping\Driver\AttributeReader
+
     gedmo.listener.timestampable:
         class: Gedmo\Timestampable\TimestampableListener
         tags:
             - { name: doctrine.event_subscriber, connection: default }
         calls:
-            - [setAnnotationReader, ["@annotation_reader"]]
+            - [setAnnotationReader, ["@gedmo.mapping.driver.attribute"]]
 
     App\EventListener\ExceptionListener:
         tags:
