@@ -4,6 +4,7 @@ namespace App\Controller\Api\Task;
 
 use App\Repository\TaskRepository;
 use App\Response\TaskResponse;
+use OpenApi\Attributes\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,6 +17,7 @@ class TasksController extends AbstractController
     }
 
     #[Route('/tasks', name: 'api_tasks', methods: ['GET'])]
+    #[Tag(name: 'Tasks')]
     public function __invoke(): Response
     {
         $tasksList = $this->taskRepository->getList();

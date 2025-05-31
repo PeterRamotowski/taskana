@@ -4,6 +4,7 @@ namespace App\Controller\Api\User;
 
 use App\Repository\UserRepository;
 use App\Response\UserCurrentResponse;
+use OpenApi\Attributes\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,7 @@ class UserCurrentController extends AbstractController
     }
 
     #[Route('/user/current', name: 'user_account', methods: 'GET')]
+    #[Tag(name: 'Users')]
     public function __invoke(): Response
     {
         $token = $this->tokenStorage->getToken();

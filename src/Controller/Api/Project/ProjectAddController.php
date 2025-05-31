@@ -4,6 +4,7 @@ namespace App\Controller\Api\Project;
 
 use App\Data\ProjectAddData;
 use App\Manager\ProjectManager;
+use OpenApi\Attributes\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -17,6 +18,7 @@ class ProjectAddController extends AbstractController
     }
 
     #[Route('/project', name: 'api_project_add', methods: ['POST'])]
+    #[Tag(name: 'Projects')]
     public function __invoke(
         #[MapRequestPayload] ProjectAddData $projectData,
     ): Response

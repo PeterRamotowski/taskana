@@ -5,6 +5,7 @@ namespace App\Controller\Api\Comment;
 use App\Entity\User;
 use App\Repository\CommentRepository;
 use App\Response\CommentResponse;
+use OpenApi\Attributes\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +18,7 @@ class CommentsUserController extends AbstractController
     }
 
     #[Route('/comments/user/{user}', name: 'api_user_comments', requirements: ['user' => '%uuid_pattern%'], methods: ['GET'])]
+    #[Tag(name: 'Comments')]
     public function __invoke(User $user): Response
     {
         $commentsList = $this->commentRepository->getUserComments($user);

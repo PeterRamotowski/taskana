@@ -5,6 +5,7 @@ namespace App\Controller\Api\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use App\Response\TaskResponse;
+use OpenApi\Attributes\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +18,7 @@ class TasksWorkerController extends AbstractController
     }
 
     #[Route('/tasks/worker/{worker}', name: 'api_tasks_worker', requirements: ['worker' => '%uuid_pattern%'], methods: ['GET'])]
+    #[Tag(name: 'Tasks')]
     public function __invoke(User $worker): Response
     {
         $tasksList = $this->taskRepository->getAssignedTasks($worker);

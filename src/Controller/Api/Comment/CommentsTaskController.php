@@ -5,6 +5,7 @@ namespace App\Controller\Api\Comment;
 use App\Entity\Task;
 use App\Repository\CommentRepository;
 use App\Response\CommentResponse;
+use OpenApi\Attributes\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +18,7 @@ class CommentsTaskController extends AbstractController
     }
 
     #[Route('/comments/task/{task}', name: 'api_task_comments', requirements: ['task' => '%uuid_pattern%'], methods: ['GET'])]
+    #[Tag(name: 'Comments')]
     public function __invoke(Task $task): Response
     {
         $commentsList = $this->commentRepository->getTaskComments($task);
