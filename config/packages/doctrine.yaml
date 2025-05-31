@@ -35,11 +35,6 @@ doctrine:
       string_functions:
         FIELD: DoctrineExtensions\Query\Mysql\Field
 
-when@test:
-  doctrine:
-    dbal:
-      dbname_suffix: '_test%env(default::TEST_TOKEN)%'
-
 when@prod:
   doctrine:
     orm:

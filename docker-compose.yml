@@ -49,26 +49,26 @@ services:
     networks:
       - taskana_network
 
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: always
-    ports:
-      - ${ADMINER_PORT}:${ADMINER_PORT}
+  taskana_db_test:
+    container_name: taskana_db_test
+    image: mysql
+    command: [
+      '--default_authentication_plugin=mysql_native_password',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci'
+    ]
     volumes:
-      - adminer_data:/var/www/html
-    depends_on:
-      db_server:
-        condition: service_healthy
-    networks:
-      - projects_network
-
-  redis_server:
-    container_name: redis_server
-    image: redis:latest
+      - taskana_db_test_data:/var/lib/mysql
+    environment:
+      MYSQL_TCP_PORT: "3306"
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_USER_PASSWORD}"
     restart: always
     networks:
       - taskana_network
 
 volumes:
   taskana_db_data:
+  taskana_db_test_data:
