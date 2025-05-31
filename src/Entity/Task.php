@@ -171,6 +171,12 @@ class Task implements EntityInterface
         return $this->creator;
     }
 
+    public function setCreator(User $creator): self
+    {
+        $this->creator = $creator;
+        return $this;
+    }
+
     /**
      * @return Collection|Comment[]
      */
