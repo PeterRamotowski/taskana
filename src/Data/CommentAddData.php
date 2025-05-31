@@ -11,5 +11,5 @@ class CommentAddData
     #[Assert\Type('string')]
     public string $description;
 
-    public ?Uuid $task;
+    public ?Uuid $task = null;
 }

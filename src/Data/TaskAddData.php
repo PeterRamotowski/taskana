@@ -12,12 +12,12 @@ class TaskAddData
     #[Assert\Type('string')]
     public string $title;
 
-    public ?string $description;
+    public ?string $description = null;
 
     #[Assert\NotBlank]
     public TaskPriority $priority;
 
-    public ?Uuid $project;
+    public ?Uuid $project = null;
 
     #[Assert\NotBlank]
     #[Assert\Uuid]

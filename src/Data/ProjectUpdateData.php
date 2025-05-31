@@ -16,5 +16,5 @@ class ProjectUpdateData
     public string $title;
 
     #[Assert\Type('string')]
-    public ?string $description;
+    public ?string $description = null;
 }
