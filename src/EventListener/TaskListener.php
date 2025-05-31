@@ -4,7 +4,7 @@ namespace App\EventListener;
 
 use App\Entity\Task;
 use App\Manager\AppEntityManager;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 
 class TaskListener
 {
@@ -13,7 +13,7 @@ class TaskListener
     ) {
     }
 
-    public function preRemove(Task $task, LifecycleEventArgs $args): void
+    public function preRemove(Task $task, PreRemoveEventArgs $args): void
     {
         $comments = $task->getComments();
 

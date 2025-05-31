@@ -3,11 +3,11 @@
 namespace App\EventListener;
 
 use App\Entity\Project;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 
 class ProjectListener
 {
-    public function preRemove(Project $project, LifecycleEventArgs $args): void
+    public function preRemove(Project $project, PreRemoveEventArgs $args): void
     {
         $tasks = $project->getTasks();
 
