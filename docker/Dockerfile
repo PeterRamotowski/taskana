@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip4 libzip-dev libwebp-dev \
     libjpeg62-turbo libpng16-16 libx11-6 \
     libxcb1 libxext6 libxrender1 \
-    procps nano git libreadline-dev sudo redis-tools ssh
+    procps nano git libreadline-dev sudo ssh
 
 RUN docker-php-ext-configure gd --with-jpeg --with-webp && \
     docker-php-ext-configure hash --with-mhash && \
@@ -29,11 +29,6 @@ RUN docker-php-ext-configure gd --with-jpeg --with-webp && \
 RUN docker-php-ext-install bcmath bz2 calendar dba exif gettext iconv intl && \
     docker-php-ext-install mysqli pgsql pdo pdo_mysql pdo_pgsql && \
     docker-php-ext-install opcache soap tidy gd xsl zip sockets
-
-RUN pecl update-channels && pecl install -s -o redis && \
-    pecl install -s -o xdebug
-
-RUN docker-php-ext-enable redis xdebug
 
 # install imagick
 RUN apt-get update && apt-get install -y \
