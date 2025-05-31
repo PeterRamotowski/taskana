@@ -39,7 +39,7 @@ class Comment implements EntityInterface
     #[ManyToOne(targetEntity: Task::class, inversedBy: 'comments')]
     #[JoinColumn(name: 'task', nullable: true)]
     #[Versioned]
-    private ?Task $task;
+    private ?Task $task = null;
 
     public function __construct() {}
 

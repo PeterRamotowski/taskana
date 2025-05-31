@@ -36,7 +36,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
 
     #[Column(type: 'string', nullable: true)]
     #[Versioned]
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * @var array|string[]
@@ -51,7 +51,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
 
     #[Column(type: 'datetime', nullable: true)]
     #[Versioned]
-    private ?\DateTime $lastLoginDate;
+    private ?\DateTime $lastLoginDate = null;
 
     /**
      * @var Collection|Task[]

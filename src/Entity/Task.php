@@ -40,7 +40,7 @@ class Task implements EntityInterface
 
     #[Column(type: 'text', nullable: true)]
     #[Versioned]
-    private ?string $description;
+    private ?string $description = null;
 
     #[Column(type: "string", enumType: TaskPriority::class, options: ['default' => TaskPriority::MEDIUM])]
     #[Versioned]
@@ -53,11 +53,11 @@ class Task implements EntityInterface
     #[ManyToOne(targetEntity: Project::class, inversedBy: 'tasks')]
     #[JoinColumn(name: 'project', nullable: true)]
     #[Versioned]
-    private ?Project $project;
+    private ?Project $project = null;
 
     #[Column(type: 'datetime', nullable: true)]
     #[Versioned]
-    private ?\DateTime $completionDate;
+    private ?\DateTime $completionDate = null;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'assignedtasks')]
     #[JoinColumn(name: 'worker', nullable: false)]

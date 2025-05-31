@@ -34,7 +34,7 @@ class Project implements EntityInterface
 
     #[Column(type: 'text', nullable: true)]
     #[Versioned]
-    private ?string $description;
+    private ?string $description = null;
 
     #[Column(type: 'boolean', nullable: false, options: ['default' => false])]
     #[Versioned]
