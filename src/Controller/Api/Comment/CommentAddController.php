@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Comment;
 
-use App\ArgumentResolver\RequestBody;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use App\Data\CommentAddData;
 use App\Manager\CommentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,8 +17,10 @@ class CommentAddController extends AbstractController
     }
 
     #[Route('/comment', name: 'api_comment_add', methods: ['POST'])]
-    public function __invoke(#[RequestBody] CommentAddData $commentData): Response
-    {        
+    public function __invoke(
+        #[MapRequestPayload] CommentAddData $commentData,
+    ): Response
+    {
         $this->commentManager->createFromData($commentData);
 
         return new Response();

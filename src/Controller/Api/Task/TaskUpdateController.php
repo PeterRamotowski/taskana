@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Task;
 
-use App\ArgumentResolver\RequestBody;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use App\Data\TaskUpdateData;
 use App\Entity\Task;
 use App\Manager\TaskManager;
@@ -18,7 +18,10 @@ class TaskUpdateController extends AbstractController
     }
 
     #[Route('/task/{task}', name: 'api_task_update', requirements: ['task' => '%uuid_pattern%'], methods: ['PUT'])]
-    public function __invoke(Task $task, #[RequestBody] TaskUpdateData $taskData): Response
+    public function __invoke(
+        #[MapRequestPayload] TaskUpdateData $taskData,
+        Task $task,
+    ): Response
     {
         $this->taskManager->updateFromData($task, $taskData);
 

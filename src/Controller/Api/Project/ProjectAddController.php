@@ -2,11 +2,11 @@
 
 namespace App\Controller\Api\Project;
 
-use App\ArgumentResolver\RequestBody;
 use App\Data\ProjectAddData;
 use App\Manager\ProjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectAddController extends AbstractController
@@ -17,7 +17,9 @@ class ProjectAddController extends AbstractController
     }
 
     #[Route('/project', name: 'api_project_add', methods: ['POST'])]
-    public function __invoke(#[RequestBody] ProjectAddData $projectData): Response
+    public function __invoke(
+        #[MapRequestPayload] ProjectAddData $projectData,
+    ): Response
     {
         $this->projectManager->createFromData($projectData);
 

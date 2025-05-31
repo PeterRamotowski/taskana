@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Task;
 
-use App\ArgumentResolver\RequestBody;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use App\Data\TaskAddData;
 use App\Manager\TaskManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +17,9 @@ class TaskAddController extends AbstractController
     }
 
     #[Route('/task', name: 'api_task_add', methods: ['POST'])]
-    public function __invoke(#[RequestBody] TaskAddData $taskData): Response
+    public function __invoke(
+        #[MapRequestPayload] TaskAddData $taskData,
+    ): Response
     {
         $this->taskManager->createFromData($taskData);
         
