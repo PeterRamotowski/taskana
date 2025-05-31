@@ -16,11 +16,19 @@ class CommentManager
     ) {
     }
 
-    public function createFromData(CommentAddData $data): void
+    public function createFromData(
+        CommentAddData $data,
+        bool $save = true,
+    ): Comment
     {
         $comment = CommentFactory::create();
         $this->buildFromData($comment, $data);
-        $this->aem->save($comment);
+
+        if ($save) {
+            $this->aem->save($comment);
+        }
+
+        return $comment;
     }
 
     private function buildFromData(Comment $comment, CommentAddData $data): void

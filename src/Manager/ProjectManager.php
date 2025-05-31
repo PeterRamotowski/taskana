@@ -15,17 +15,26 @@ class ProjectManager
     ) {
     }
 
-    public function createFromData(ProjectAddData $data): void
+    public function createFromData(
+        ProjectAddData $data,
+        bool $save = true,
+    ): Project
     {
         $project = ProjectFactory::create();
         $this->buildFromData($project, $data);
-        $this->aem->save($project);
+
+        if ($save) {
+            $this->aem->save($project);
+        }
+
+        return $project;
     }
 
-    public function updateFromData(Project $project, ProjectUpdateData $data): void
+    public function updateFromData(Project $project, ProjectUpdateData $data): Project
     {
         $this->buildFromData($project, $data);
-        $this->aem->save($project);
+        $this->aem->flush();
+        return $project;
     }
 
     private function buildFromData(Project $project, ProjectAddData|ProjectUpdateData $data): void

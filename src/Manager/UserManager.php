@@ -30,26 +30,36 @@ class UserManager
         return true;
     }
 
-    public function updatePassword(User $user, string $password): void
+    public function updatePassword(User $user, string $password): User
     {
         $user->setPassword($this->passwordHasher->hash($password));
-        $this->aem->refresh();
+        $this->aem->flush();
+        return $user;
     }
 
     /**
      * @param array<string> $roles
      */
-    public function updateRoles(User $user, array $roles): void
+    public function updateRoles(User $user, array $roles): User
     {
         $user->setRoles($roles);
-        $this->aem->refresh();
+        $this->aem->flush();
+        return $user;
     }
 
-    public function createFromData(UserAddData $data): void
+    public function createFromData(
+        UserAddData $data,
+        bool $save = true,
+    ): User
     {
         $user = UserFactory::create();
         $this->buildFromData($user, $data);
-        $this->aem->save($user);
+
+        if ($save) {
+            $this->aem->save($user);
+        }
+
+        return $user;
     }
 
     private function buildFromData(User $user, UserAddData $data): void

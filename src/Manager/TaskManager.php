@@ -21,20 +21,29 @@ class TaskManager
     ) {
     }
 
-    public function createFromData(TaskAddData $data): void
+    public function createFromData(
+        TaskAddData $data,
+        bool $save = true,
+    ): Task
     {
         $task = TaskFactory::create();
         $this->buildFromData($task, $data);
-        $this->aem->save($task);
+
+        if ($save) {
+            $this->aem->save($task);
+        }
+
+        return $task;
     }
 
-    public function updateFromData(Task $task, TaskUpdateData $data): void
+    public function updateFromData(Task $task, TaskUpdateData $data): Task
     {
         $this->buildFromData($task, $data);
-        $this->aem->save($task);
+        $this->aem->flush();
+        return $task;
     }
 
-    private function buildFromData(Task $task, TaskAddData|TaskUpdateData $data): void
+    public function buildFromData(Task $task, TaskAddData|TaskUpdateData $data): void
     {
         /** @var User $worker */
         $worker = $this->userRepository->getReference($data->worker);
@@ -51,7 +60,7 @@ class TaskManager
         }
     }
 
-    public function updateStatus(Task $task, TaskStatus $status): void
+    public function updateStatus(Task $task, TaskStatus $status): Task
     {
         $task->setStatus($status);
 
@@ -59,7 +68,8 @@ class TaskManager
             $task->setCompletionDate();
         }
 
-        $this->aem->save($task);
+        $this->aem->flush();
+        return $task;
     }
 
 }

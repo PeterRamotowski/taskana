@@ -20,6 +20,6 @@ class LoginSuccessListener
         /** @var User $currentUser */
         $currentUser = $event->getUser();
         $currentUser->setLastLoginDate();
-        $this->aem->refresh();
+        $this->aem->flush();
     }
 }
