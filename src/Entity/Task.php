@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Entity\User;
 use App\Entity\Enum\TaskPriority;
 use App\Entity\Enum\TaskStatus;
 use App\Entity\Trait\EntityTimestampableTrait;
+use App\Entity\User;
 use App\EventListener\TaskListener;
 use App\Repository\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -76,7 +77,9 @@ class Task implements EntityInterface
     #[OneToMany(targetEntity: Comment::class, mappedBy: 'task')]
     private Collection $comments;
 
-    public function __construct() {}
+    public function __construct() {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): Uuid
     {

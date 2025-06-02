@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Comment;
 use App\Entity\Task;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -71,7 +72,11 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
     #[OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
     private Collection $comments;
 
-    public function __construct() {}
+    public function __construct() {
+        $this->assignedtasks = new ArrayCollection();
+        $this->createdtasks = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): Uuid
     {

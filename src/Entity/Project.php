@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\EntityTimestampableTrait;
 use App\EventListener\ProjectListener;
 use App\Repository\ProjectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -46,7 +47,9 @@ class Project implements EntityInterface
     #[OneToMany(targetEntity: Task::class, mappedBy: 'project')]
     private Collection $tasks;
 
-    public function __construct() {}
+    public function __construct() {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): Uuid
     {
