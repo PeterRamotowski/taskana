@@ -16,9 +16,9 @@ class UserFixtures extends Fixture
     ) {
     }
 
-    public function load(ObjectManager $manager): void
+    public static function getUsersData(): array
     {
-        $users = [
+        return [
             [
                 'email' => 'taskana@fkv.pl',
                 'password' => 'adminpassword',
@@ -35,7 +35,11 @@ class UserFixtures extends Fixture
                 'roles' => []
             ]
         ];
+    }
 
+    public function load(ObjectManager $manager): void
+    {
+        $users = self::getUsersData();
         foreach ($users as $index => $userData) {
             $userAddData = new UserAddData();
             $userAddData->email = $userData['email'];
