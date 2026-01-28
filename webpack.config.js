@@ -1,5 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
 const webpack = require('webpack');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -31,12 +32,24 @@ Encore.setOutputPath('./public/assets')
 		babelConfig.plugins = ['@babel/plugin-transform-runtime'];
 	})
 
-	.enableEslintPlugin()
-
-	.enableSassLoader()
+	.enableSassLoader((options) => {
+		options.sassOptions = {
+			silenceDeprecations: ['import', 'legacy-js-api', 'slash-div', 'if-function'],
+		};
+		options.warnRuleAsWarning = false;
+	})
 	.enableVueLoader(() => {}, { runtimeCompilerBuild: false, version: 3 });
 
 if (!Encore.isProduction()) {
+	Encore.addPlugin(
+		new ESLintPlugin({
+			extensions: ['js', 'vue'],
+			files: 'assets/',
+			exclude: ['node_modules', 'public'],
+			emitWarning: true,
+			failOnError: false,
+		}),
+	);
 	Encore.addPlugin(
 		new BundleAnalyzerPlugin({
 			analyzerMode: 'static',

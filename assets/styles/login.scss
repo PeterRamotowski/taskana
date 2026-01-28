@@ -1,6 +1,6 @@
 $enable-responsive-spacings: false;
 
-@import '../../node_modules/@picocss/pico/scss/pico.scss';
+@use '../../node_modules/@picocss/pico/scss/pico.scss';
 
 [data-theme=light],
 :root:not([data-theme=dark]) {
