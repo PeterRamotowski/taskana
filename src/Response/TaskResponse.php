@@ -5,6 +5,7 @@ namespace App\Response;
 use App\Entity\Project;
 use App\Entity\Task;
 use App\Entity\User;
+use App\Entity\Enum\RecurrencePattern;
 use App\Entity\Enum\TaskPriority;
 use App\Entity\Enum\TaskStatus;
 use Symfony\Component\Uid\Uuid;
@@ -23,9 +24,9 @@ class TaskResponse
         $this->creator = $this->task->getCreator();
     }
 
-    public function getId(): Uuid
+    public function getId(): string
     {
-        return $this->task->getId();
+        return $this->task->getId()->toRfc4122();
     }
 
     public function getTitle(): string
@@ -96,5 +97,35 @@ class TaskResponse
     public function getCommentsCount(): int
     {
         return $this->task->getComments()->count();
+    }
+
+    public function getEstimatedHours(): ?float
+    {
+        return $this->task->getEstimatedHours();
+    }
+
+    public function getDueDate(): ?\DateTime
+    {
+        return $this->task->getDueDate();
+    }
+
+    public function getIsRecurring(): bool
+    {
+        return $this->task->getIsRecurring();
+    }
+
+    public function getRecurrencePattern(): ?RecurrencePattern
+    {
+        return $this->task->getRecurrencePattern();
+    }
+
+    public function getRecurrenceInterval(): ?int
+    {
+        return $this->task->getRecurrenceInterval();
+    }
+
+    public function getRecurrenceEndDate(): ?\DateTime
+    {
+        return $this->task->getRecurrenceEndDate();
     }
 }

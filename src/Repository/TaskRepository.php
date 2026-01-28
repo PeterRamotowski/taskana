@@ -40,17 +40,13 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function getProjectTasks(Project $project): iterable
     {
-        $parameters = [
-            'project' => $project,
-        ];
-
         $qb = $this
             ->createQueryBuilder('t')
             ->andWhere('t.project = :project');
 
         $qb->addOrderBy('t.updatedDate', 'DESC');
 
-        $qb->setParameters($parameters);
+        $qb->setParameter('project', $project->getId()->toBinary(), 'uuid');
 
         return $qb->getQuery()->getResult();
     }
@@ -66,7 +62,6 @@ class TaskRepository extends ServiceEntityRepository
 
         $qb->setParameter('worker', Uuid::fromString($user->getId())->toBinary());
 
-        // $qb->addOrderBy('t.updatedDate', 'DESC');
         $qb->add('orderBy', 'FIELD(t.priority, :priorities), FIELD(t.status, :statuses)');
         $qb->setParameter('statuses', [
             TaskStatus::ACTIVE,

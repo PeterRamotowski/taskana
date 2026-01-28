@@ -62,12 +62,25 @@
         <app-chip type="schedule">
           Created: {{ formatDate(taskData.createdDate) }}
         </app-chip>
+        <app-chip type="schedule" v-if="taskData.dueDate">
+          Due: {{ formatDate(taskData.dueDate) }}
+        </app-chip>
         <app-chip type="person" v-if="taskData.worker" :to="{ name: 'userDetails', params: { id: taskData.worker }}">
           Assigned to: {{ taskData.workerUsername }}
+        </app-chip>
+        <app-chip type="schedule" v-if="taskData.isRecurring">
+          🔄 Recurring: {{ taskData.recurrencePattern }} (every {{ taskData.recurrenceInterval }})
         </app-chip>
       </div>
     </v-card-text>
   </v-card>
+
+  <time-tracker 
+    v-if="taskData.id" 
+    :task-id="taskData.id" 
+    :estimated-hours="taskData.estimatedHours"
+    class="mt-4"
+  />
 
   <p class="text-h6 mt-7 mb-7">
     Comments
@@ -116,6 +129,7 @@
   import formTask from '../forms/FormTask.vue';
   import formComment from '../forms/FormComment.vue';
   import AppChip from '../components/AppChip.vue';
+  import TimeTracker from '../components/TimeTracker.vue';
   import { VCard, VCardText, VCardActions, VRow, VCol, VDialog } from 'vuetify/components';
 
   const { userStore } = useStore();

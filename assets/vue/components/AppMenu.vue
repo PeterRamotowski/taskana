@@ -10,6 +10,9 @@
     <v-btn size="large" class="ml-sm-4" :to="{ name: 'users' }" :variant="activePage == 'users' ? 'outlined' : 'text'">
       Users
     </v-btn>
+    <v-btn size="large" class="ml-sm-4" :to="{ name: 'reports' }" :variant="activePage == 'reports' ? 'outlined' : 'text'">
+      Reports
+    </v-btn>
     <v-btn size="large" class="ml-sm-4" :to="{ name: 'userAccount' }" :variant="activePage == 'account' ? 'outlined' : 'text'">
       Me
     </v-btn>
@@ -43,6 +46,9 @@
         case 'users':
         case 'userDetails':
           activePage.value = 'users';
+          break;
+        case 'reports':
+          activePage.value = 'reports';
           break;
         case 'userAccount':
           activePage.value = 'account';

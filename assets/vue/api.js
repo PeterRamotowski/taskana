@@ -1,21 +1,50 @@
-async function useFetch(url, method = 'GET', body = null) {
-  let data = {};
-  let error = {};
-  let headers = {};
+async function useFetch(url, method = 'GET', body = null, options = {}) {
+  let data = null;
+  let error = null;
+  let response = null;
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers
+  };
 
-  if (body) {
-    body = JSON.stringify(body);
-    headers = {
-      'Content-Type': 'application/json'
-    };
+  try {
+    response = await fetch(url, { 
+      method, 
+      body: body ? JSON.stringify(body) : null, 
+      headers,
+      ...options
+    });
+
+    if (options.responseType === 'blob') {
+      data = await response.blob();
+    } else {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
+    }
+
+    if (!response.ok) {
+      const errorMessage = data?.message || data?.error || `HTTP ${response.status}: ${response.statusText}`;
+      throw new Error(errorMessage);
+    }
+  } catch (err) {
+    error = err;
+    console.error(`API Error [${method} ${url}]:`, err);
   }
 
-  await fetch(url, { method, body, headers })
-    .then((res) => res.json())
-    .then((json) => (data = json))
-    .catch((err) => (error = err));
+  return { data, error, response };
+}
 
-  return { data, error }
+function buildQueryString(params) {
+  if (!params) return '';
+  const filteredParams = Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value != null)
+  );
+  const queryString = new URLSearchParams(filteredParams).toString();
+  return queryString ? '?' + queryString : '';
 }
 
 /* Tasks related */
@@ -94,4 +123,40 @@ export function loadUsers() {
 }
 export function loadUser(id) {
   return useFetch('/api/user/' + id);
+}
+
+/* Time Tracking related */
+
+export function loadTimeEntries(taskId) {
+  return useFetch('/api/time-tracking/task/' + taskId + '/entries');
+}
+export function startTimeTracking(taskId) {
+  return useFetch('/api/time-tracking/task/' + taskId + '/start', 'POST');
+}
+export function stopTimeTracking(entryId) {
+  return useFetch('/api/time-tracking/entry/' + entryId + '/stop', 'POST');
+}
+export function addManualTimeEntry(taskId, body) {
+  return useFetch('/api/time-tracking/task/' + taskId + '/manual', 'POST', body);
+}
+
+/* Reports related */
+
+export function loadUserReport(userId, params) {
+  return useFetch('/api/reports/user/' + userId + buildQueryString(params));
+}
+export function loadTeamReport(params) {
+  return useFetch('/api/reports/team' + buildQueryString(params));
+}
+export function loadProjectReport(projectId, params) {
+  return useFetch('/api/reports/project/' + projectId + buildQueryString(params));
+}
+export function exportUserReport(userId, params) {
+  return useFetch('/api/reports/user/' + userId + '/export' + buildQueryString(params), 'GET', null, { responseType: 'blob' });
+}
+export function exportTeamReport(params) {
+  return useFetch('/api/reports/team/export' + buildQueryString(params), 'GET', null, { responseType: 'blob' });
+}
+export function exportProjectReport(projectId, params) {
+  return useFetch('/api/reports/project/' + projectId + '/export' + buildQueryString(params), 'GET', null, { responseType: 'blob' });
 }

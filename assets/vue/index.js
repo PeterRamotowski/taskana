@@ -14,6 +14,7 @@ import PageProjects from './pages/PageProjects.vue';
 import PageProjectEdit from './pages/PageProjectEdit.vue';
 import PageUsers from './pages/PageUsers.vue';
 import PageUserDetails from './pages/PageUserDetails.vue';
+import PageReports from './pages/PageReports.vue';
 import '../styles/app.scss';
 
 const routes = [
@@ -26,6 +27,7 @@ const routes = [
   { path: '/app/users', name: 'users', component: PageUsers },
   { path: '/app/user/:id', name: 'userDetails', component: PageUserDetails },
   { path: '/app/account', name: 'userAccount', component: PageUserDetails },
+  { path: '/app/reports', name: 'reports', component: PageReports },
 ]
 
 const router = createRouter({

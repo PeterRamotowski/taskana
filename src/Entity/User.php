@@ -234,7 +234,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
     public function jsonSerialize(): mixed
     {
         return [
-          'id' => $this->getId(),
+          'id' => $this->getId()->toRfc4122(),
           'name' => $this->getName(),
           'username' => $this->getUsername(),
           'roles' => $this->getRoles(),

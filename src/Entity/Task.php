@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\RecurrencePattern;
 use App\Entity\Enum\TaskPriority;
 use App\Entity\Enum\TaskStatus;
 use App\Entity\Trait\EntityTimestampableTrait;
@@ -77,8 +78,55 @@ class Task implements EntityInterface
     #[OneToMany(targetEntity: Comment::class, mappedBy: 'task')]
     private Collection $comments;
 
+    /**
+     * @var Collection|TimeEntry[]
+     */
+    #[OneToMany(targetEntity: TimeEntry::class, mappedBy: 'task', cascade: ['persist', 'remove'])]
+    private Collection $timeEntries;
+
+    #[Column(type: 'float', nullable: true)]
+    #[Versioned]
+    private ?float $estimatedHours = null;
+
+    #[Column(type: 'datetime', nullable: true)]
+    #[Versioned]
+    private ?\DateTime $dueDate = null;
+
+    #[Column(type: 'boolean', options: ['default' => false])]
+    #[Versioned]
+    private bool $isRecurring = false;
+
+    #[Column(type: "string", enumType: RecurrencePattern::class, nullable: true)]
+    #[Versioned]
+    private ?RecurrencePattern $recurrencePattern = null;
+
+    #[Column(type: 'integer', nullable: true, options: ['default' => 1])]
+    #[Versioned]
+    private ?int $recurrenceInterval = 1; // e.g., every 2 weeks = interval: 2, pattern: WEEKLY
+
+    #[Column(type: 'datetime', nullable: true)]
+    #[Versioned]
+    private ?\DateTime $recurrenceEndDate = null;
+
+    #[ManyToOne(targetEntity: Task::class, inversedBy: 'recurringInstances')]
+    #[JoinColumn(name: 'parent_task_id', nullable: true, onDelete: 'SET NULL')]
+    #[Versioned]
+    private ?Task $parentTask = null;
+
+    /**
+     * @var Collection|Task[]
+     */
+    #[OneToMany(targetEntity: Task::class, mappedBy: 'parentTask')]
+    private Collection $recurringInstances;
+
+    #[Column(type: 'datetime', nullable: true)]
+    #[Versioned]
+    private ?\DateTime $lastRecurrenceGeneration = null;
+
     public function __construct() {
         $this->comments = new ArrayCollection();
+        $this->timeEntries = new ArrayCollection();
+        $this->recurringInstances = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -195,5 +243,188 @@ class Task implements EntityInterface
     {
       $this->comments[] = $comment;
       return $this;
+    }
+
+    /**
+     * @return Collection|TimeEntry[]
+     */
+    public function getTimeEntries(): Collection
+    {
+        return $this->timeEntries;
+    }
+
+    public function addTimeEntry(TimeEntry $timeEntry): self
+    {
+        if (!$this->timeEntries->contains($timeEntry)) {
+            $this->timeEntries[] = $timeEntry;
+            $timeEntry->setTask($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Get total tracked time in hours
+     */
+    public function getTotalTrackedHours(): float
+    {
+        $totalSeconds = 0;
+        foreach ($this->timeEntries as $entry) {
+            if (!$entry->isRunning()) {
+                $totalSeconds += $entry->getDuration();
+            }
+        }
+        return round($totalSeconds / 3600, 2);
+    }
+
+    /**
+     * Get currently running time entry
+     */
+    public function getActiveTimeEntry(): ?TimeEntry
+    {
+        foreach ($this->timeEntries as $entry) {
+            if ($entry->isRunning()) {
+                return $entry;
+            }
+        }
+        return null;
+    }
+
+    public function getEstimatedHours(): ?float
+    {
+        return $this->estimatedHours;
+    }
+
+    public function setEstimatedHours(?float $estimatedHours): self
+    {
+        $this->estimatedHours = $estimatedHours;
+        return $this;
+    }
+
+    public function getDueDate(): ?\DateTime
+    {
+        return $this->dueDate;
+    }
+
+    public function setDueDate(?\DateTime $dueDate): self
+    {
+        $this->dueDate = $dueDate;
+        return $this;
+    }
+
+    public function isOverdue(): bool
+    {
+        if ($this->dueDate === null || $this->status === TaskStatus::COMPLETE) {
+            return false;
+        }
+        return $this->dueDate < new \DateTime();
+    }
+
+    public function getIsRecurring(): bool
+    {
+        return $this->isRecurring;
+    }
+
+    public function setIsRecurring(bool $isRecurring): self
+    {
+        $this->isRecurring = $isRecurring;
+        return $this;
+    }
+
+    public function getRecurrencePattern(): ?RecurrencePattern
+    {
+        return $this->recurrencePattern;
+    }
+
+    public function setRecurrencePattern(?RecurrencePattern $recurrencePattern): self
+    {
+        $this->recurrencePattern = $recurrencePattern;
+        return $this;
+    }
+
+    public function getRecurrenceInterval(): ?int
+    {
+        return $this->recurrenceInterval;
+    }
+
+    public function setRecurrenceInterval(?int $recurrenceInterval): self
+    {
+        $this->recurrenceInterval = $recurrenceInterval;
+        return $this;
+    }
+
+    public function getRecurrenceEndDate(): ?\DateTime
+    {
+        return $this->recurrenceEndDate;
+    }
+
+    public function setRecurrenceEndDate(?\DateTime $recurrenceEndDate): self
+    {
+        $this->recurrenceEndDate = $recurrenceEndDate;
+        return $this;
+    }
+
+    public function getParentTask(): ?Task
+    {
+        return $this->parentTask;
+    }
+
+    public function setParentTask(?Task $parentTask): self
+    {
+        $this->parentTask = $parentTask;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getRecurringInstances(): Collection
+    {
+        return $this->recurringInstances;
+    }
+
+    public function getLastRecurrenceGeneration(): ?\DateTime
+    {
+        return $this->lastRecurrenceGeneration;
+    }
+
+    public function setLastRecurrenceGeneration(?\DateTime $lastRecurrenceGeneration): self
+    {
+        $this->lastRecurrenceGeneration = $lastRecurrenceGeneration;
+        return $this;
+    }
+
+    /**
+     * Calculate the next occurrence date based on recurrence settings
+     */
+    public function getNextOccurrenceDate(?\DateTime $fromDate = null): ?\DateTime
+    {
+        if (!$this->isRecurring || $this->recurrencePattern === null) {
+            return null;
+        }
+
+        $baseDate = $fromDate ?? ($this->dueDate ?? new \DateTime());
+        $nextDate = clone $baseDate;
+        $interval = $this->recurrenceInterval ?? 1;
+
+        switch ($this->recurrencePattern) {
+            case RecurrencePattern::DAILY:
+                $nextDate->modify("+{$interval} days");
+                break;
+            case RecurrencePattern::WEEKLY:
+                $nextDate->modify("+{$interval} weeks");
+                break;
+            case RecurrencePattern::MONTHLY:
+                $nextDate->modify("+{$interval} months");
+                break;
+            case RecurrencePattern::YEARLY:
+                $nextDate->modify("+{$interval} years");
+                break;
+        }
+
+        if ($this->recurrenceEndDate !== null && $nextDate > $this->recurrenceEndDate) {
+            return null;
+        }
+
+        return $nextDate;
     }
 }

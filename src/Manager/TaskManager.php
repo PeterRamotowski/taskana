@@ -58,6 +58,30 @@ class TaskManager
             $project = $this->projectRepository->getReference($data->project);
             $task->setProject($project);
         }
+
+        if (property_exists($data, 'estimatedHours')) {
+            $task->setEstimatedHours($data->estimatedHours);
+        }
+
+        if (property_exists($data, 'dueDate') && $data->dueDate) {
+            $task->setDueDate(new \DateTime($data->dueDate));
+        }
+
+        if (property_exists($data, 'isRecurring')) {
+            $task->setIsRecurring($data->isRecurring);
+        }
+
+        if (property_exists($data, 'recurrencePattern')) {
+            $task->setRecurrencePattern($data->recurrencePattern);
+        }
+
+        if (property_exists($data, 'recurrenceInterval')) {
+            $task->setRecurrenceInterval($data->recurrenceInterval);
+        }
+
+        if (property_exists($data, 'recurrenceEndDate') && $data->recurrenceEndDate) {
+            $task->setRecurrenceEndDate(new \DateTime($data->recurrenceEndDate));
+        }
     }
 
     public function updateStatus(Task $task, TaskStatus $status): Task
